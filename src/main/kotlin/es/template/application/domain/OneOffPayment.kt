@@ -1,8 +1,9 @@
 package es.template.application.domain
 
+// We could use simplified version of AggregateRoot in this case
 class OneOffPayment: Initializable, AggregateRoot<PaymentEvent>() {
 
-    override fun initialize(): PaymentHistory {
+    override fun initialize(): PaymentChanges {
         TODO("Not yet implemented")
 
     }

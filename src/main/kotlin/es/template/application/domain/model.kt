@@ -10,19 +10,30 @@ data class PaymentAggregate(val identifier: String) : Aggregate(AGGREGATE_TYPE, 
     }
 }
 
-data class PaymentHistory(val events: List<Event>)
+data class PaymentHistory(val events: List<PaymentEvent>)
+data class PaymentChanges(val events: List<PaymentEvent>)
 
-interface Storable {
+// In alternative payment changes approach, we could remove it
+interface Storable<E : Event> {
     // we need interface for aggregate root, which can be extended by other interfaces, to be able to store model, or extract changes
+    // I would like to have changes only
+    fun pullChanges(): List<E>
+    fun getAggregateHistory(): List<E>
 }
 
 // new approach with ... model
 
 // We could also synchronize adding to read model in DB, flat structure of order, and get it later in Controller
-interface Initializable {
-    fun initialize(): PaymentHistory
+
+interface Creatable: Storable<PaymentEvent> {
+
+    fun create(): PaymentChanges
 }
 
-interface Completable {
-    fun complete(): PaymentHistory
+interface Initializable: Storable<PaymentEvent> {
+    fun initialize(): PaymentChanges
+}
+
+interface Completable: Storable<PaymentEvent> {
+    fun complete(): PaymentChanges
 }
