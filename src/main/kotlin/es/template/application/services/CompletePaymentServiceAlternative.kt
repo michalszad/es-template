@@ -11,9 +11,9 @@ class CompletePaymentServiceAlternative(
 ) : CompletePaymentUseCase {
     override fun completePayment(command: CompletePaymentUseCase.CompletePaymentCommand): PaymentHistory {
         val payment = paymentRepository.findCompletable(command.id) ?: throw RuntimeException("Ups, Improper state!")
-        val paymentChanges = payment.complete()
+        val paymentChanges = payment.complete((command.id))
         // Approach with aggregate
-        paymentRepository.store(payment)
+//        paymentRepository.store(payment)
 
         // Or
         paymentRepository.storeAlternative(paymentChanges)

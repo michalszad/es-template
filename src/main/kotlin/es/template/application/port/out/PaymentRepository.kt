@@ -11,5 +11,6 @@ interface PaymentRepository {
     // store events
     fun storeAlternative(events: PaymentChanges)
     fun findInitializable(id: String): Initializable?
+    fun findInitializableAlternative(id: String): InitializableOneOff?
     fun findCompletable(id: String): Completable?
 }

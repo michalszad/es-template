@@ -23,12 +23,14 @@ abstract class AggregateRoot<E : Event> {
         }
     }
 
+    // This make no sense when we use event driven domain model
     protected fun applyEvent(event: E) {
         apply(event)
         add(event)
     }
 
-    private fun apply(event: E) {
+    // This make more sens when we use event driven domain model
+    protected fun apply(event: E) {
         rehydrate(event)
     }
 

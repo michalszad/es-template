@@ -31,9 +31,27 @@ interface Creatable: Storable<PaymentEvent> {
 }
 
 interface Initializable: Storable<PaymentEvent> {
-    fun initialize(): PaymentChanges
+    fun initialize(paymentId: String): PaymentChanges
 }
 
 interface Completable: Storable<PaymentEvent> {
-    fun complete(): PaymentChanges
+    fun complete(paymentId: String): PaymentChanges
+}
+
+// Interfaces for specific payment
+
+interface History<E: Event> {
+    fun pullChanges(): List<E>
+    fun getAggregateHistory(): List<E>
+}
+interface InitializableOneOff: History<PaymentEvent> {
+    fun initialize(paymentId : String): CompletableOneOff
+}
+
+interface CompletableOneOff: History<PaymentEvent> {
+    fun complete(paymentId: String): CreditableOneOff
+}
+
+interface CreditableOneOff: History<PaymentEvent> {
+    fun credit(paymentId : String)
 }

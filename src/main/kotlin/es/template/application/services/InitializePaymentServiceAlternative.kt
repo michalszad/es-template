@@ -15,7 +15,7 @@ class InitializePaymentServiceAlternative(
     override fun initializePayment(command: InitializePaymentUseCase.InitializePaymentCommand): PaymentHistory {
         // should we distinguish specific payments, in separate repo or methods?
         val payment = paymentRepository.findInitializable(command.id) ?: throw RuntimeException("Ups, improper state")
-        val paymentChanges = payment.initialize()
+        val paymentChanges = payment.initialize(command.id)
 
         // Approach with aggregate
         paymentRepository.store(payment)
