@@ -7,7 +7,7 @@ import es.template.application.port.out.AggregateRepository
 import org.springframework.stereotype.Service
 
 @Service
-class CreateCommandService(private val paymentRepository: AggregateRepository<Payment>) : CreatePaymentUseCase {
+class CreatePaymentService(private val paymentRepository: AggregateRepository<Payment>) : CreatePaymentUseCase {
     override fun createPayment(command: CreatePaymentUseCase.CreatePaymentCommand): PaymentHistory {
         val payment = Payment.create(command.paymentId, command.description)
         paymentRepository.store(payment)

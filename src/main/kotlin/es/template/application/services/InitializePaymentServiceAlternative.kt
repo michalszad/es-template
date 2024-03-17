@@ -7,7 +7,7 @@ import es.template.application.port.out.PaymentRepository
 import org.springframework.stereotype.Service
 
 @Service
-class InitializeCommandServiceAlternative(
+class InitializePaymentServiceAlternative(
     private val paymentRepository: PaymentRepository,
     private val paymentExternalService: PaymentExternalService,
 ) : InitializePaymentUseCase {
