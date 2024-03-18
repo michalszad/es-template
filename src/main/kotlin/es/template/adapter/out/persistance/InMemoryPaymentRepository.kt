@@ -5,7 +5,9 @@ import es.template.application.domain.PaymentAggregate
 import es.template.application.domain.PaymentEvent
 import es.template.application.port.out.AggregateRepository
 
-class InMemoryPaymentRepository(private val eventStore: EventStore) : AggregateRepository<Payment> {
+class InMemoryPaymentRepository(
+        private val eventStore: EventStore,
+        private val paymentProjection: PaymentProjection) : AggregateRepository<Payment> {
 
     companion object {
         private val PAYMENT_NOT_FOUND: Payment? = null
@@ -13,8 +15,8 @@ class InMemoryPaymentRepository(private val eventStore: EventStore) : AggregateR
 
     override fun findById(id: String): Payment? {
         val history = eventStore
-            .findByAggregate(PaymentAggregate(id))
-            .filterIsInstance<PaymentEvent>()
+                .findByAggregate(PaymentAggregate(id))
+                .filterIsInstance<PaymentEvent>()
 
         return if (history.isNotEmpty()) {
             val payment = Payment()

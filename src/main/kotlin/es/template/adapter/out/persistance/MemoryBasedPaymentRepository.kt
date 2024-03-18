@@ -4,7 +4,12 @@ import es.template.application.domain.*
 import es.template.application.port.out.PaymentRepository
 
 // we could use here PaymentFactory from domain
-class MemoryBasedPaymentRepository : PaymentRepository {
+class MemoryBasedPaymentRepository(
+        private val paymentFactory: PaymentFactory,
+        private val paymentFactoryAlternative: PaymentFactoryAlternative,
+        private val eventStore: EventStore,
+        private val paymentProjection: PaymentProjection
+) : PaymentRepository {
 
 
     override fun store(payment: Storable<PaymentEvent>) {
@@ -16,14 +21,26 @@ class MemoryBasedPaymentRepository : PaymentRepository {
     }
 
     override fun findInitializable(id: String): Initializable? {
-        TODO("Not yet implemented")
+        val history = eventStore
+                .findByAggregate(PaymentAggregate(id))
+                .filterIsInstance<PaymentEvent>()
+
+        return paymentFactory.createInitializableFrom(history)
     }
 
     override fun findInitializableAlternative(id: String): InitializableOneOff? {
-        TODO("Not yet implemented")
+        val history = eventStore
+                .findByAggregate(PaymentAggregate(id))
+                .filterIsInstance<PaymentEvent>()
+
+        return paymentFactoryAlternative.createInitializableFrom(history)
     }
 
     override fun findCompletable(id: String): Completable? {
-        TODO("Not yet implemented")
+        val history = eventStore
+                .findByAggregate(PaymentAggregate(id))
+                .filterIsInstance<PaymentEvent>()
+
+        return paymentFactory.createCompletableFrom(history)
     }
 }
