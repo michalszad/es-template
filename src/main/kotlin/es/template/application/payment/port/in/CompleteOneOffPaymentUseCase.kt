@@ -1,8 +1,8 @@
-package es.template.application.port.`in`
+package es.template.application.payment.port.`in`
 
 import es.template.application.domain.PaymentHistory
 
-interface CompletePaymentUseCase {
+interface CompleteOneOffPaymentUseCase {
 
     fun completePayment(command: CompletePaymentCommand): PaymentHistory
 

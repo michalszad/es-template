@@ -1,6 +1,8 @@
-package es.template.application.domain
+package es.template.application.payment.domain
 
-class CompletedOneOff: CreditableOneOff, AggregateRoot<PaymentEvent>() {
+import es.template.application.domain.AggregateRoot
+
+class CompletedOneOffPayment : Creditable, AggregateRoot<PaymentEvent>() {
     override fun credit(paymentId: String) {
         TODO("Not yet implemented")
     }

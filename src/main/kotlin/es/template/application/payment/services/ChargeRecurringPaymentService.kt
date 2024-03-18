@@ -1,20 +1,20 @@
-package es.template.application.services
+package es.template.application.payment.services
 
-import es.template.application.domain.PaymentChanges
-import es.template.application.domain.PaymentFactory
-import es.template.application.domain.PaymentHistory
-import es.template.application.port.`in`.ChargePaymentUseCase
-import es.template.application.port.out.PaymentRepository
 
-class ChargePaymentServiceAlternative2(
+import es.template.application.payment.domain.PaymentChanges
+import es.template.application.payment.domain.PaymentHistory
+import es.template.application.payment.port.`in`.ChargeRecurringPaymentUseCase
+import es.template.application.payment.port.out.PaymentRepository
+
+class ChargeRecurringPaymentService(
     private val paymentRepository: PaymentRepository
-) : ChargePaymentUseCase {
-    override fun initializePayment(command: ChargePaymentUseCase.ChargePaymentCommand): PaymentHistory {
+) : ChargeRecurringPaymentUseCase {
+    override fun initializePayment(command: ChargeRecurringPaymentUseCase.ChargePaymentCommand): PaymentHistory {
 
         // Create should be earlier
         // we could use combination of use cases/services
         // or we could copy the code from services/use cases
-        val payment = paymentRepository.findInitializableAlternative(command.id) ?: throw RuntimeException("Ups, improper state")
+        val payment = paymentRepository.findInitializable(command.id)
         val initialized = payment.initialize(command.id)
         // maybe we can also pass changes to save it only once
         paymentRepository.storeAlternative(PaymentChanges(initialized.pullChanges()))

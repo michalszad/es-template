@@ -1,9 +1,9 @@
 package es.template.adapter.`in`.web
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import es.template.application.port.`in`.CompletePaymentUseCase
-import es.template.application.port.`in`.CreatePaymentUseCase
-import es.template.application.port.`in`.InitializePaymentUseCase
+import es.template.application.payment.port.`in`.CompleteOneOffPaymentUseCase
+import es.template.application.payment.port.`in`.CreateOneOffPaymentUseCase
+import es.template.application.payment.port.`in`.InitializeOneOffPaymentUseCase
 import java.util.*
 
 // Validation could be added here, or in specific resource
@@ -12,21 +12,21 @@ class CreateRequest {
     var description: String? = null
 
     fun toCommand() =
-        CreatePaymentUseCase.CreatePaymentCommand(paymentId = UUID.randomUUID().toString(), description = description!!)
+        CreateOneOffPaymentUseCase.CreatePaymentCommand(paymentId = UUID.randomUUID().toString(), description = description!!)
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class InitializeRequest {
     var paymentId: String? = null
 
-    fun toCommand() = InitializePaymentUseCase.InitializePaymentCommand(id = paymentId!!)
+    fun toCommand() = InitializeOneOffPaymentUseCase.InitializePaymentCommand(id = paymentId!!)
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class CompleteRequest {
     var paymentId: String? = null
 
-    fun toCommand() = CompletePaymentUseCase.CompletePaymentCommand(id = paymentId!!)
+    fun toCommand() = CompleteOneOffPaymentUseCase.CompletePaymentCommand(id = paymentId!!)
 }
 
 data class PaymentResponse(

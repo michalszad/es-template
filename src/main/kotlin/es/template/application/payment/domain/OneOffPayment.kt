@@ -1,12 +1,14 @@
-package es.template.application.domain
+package es.template.application.payment.domain
+
+import es.template.application.domain.*
 
 // We could use simplified version of AggregateRoot in this case
 class OneOffPayment: Initializable, AggregateRoot<PaymentEvent>() {
 
-    override fun initialize(paymentId: String): PaymentChanges {
+    override fun initialize(paymentId: String): Completable {
         // some funny logic
         apply(PaymentInitializedEvent(paymentId = paymentId))
-        return PaymentChanges(pullChanges())
+        return InitializedOneOffPayment().apply { rehydrateFrom(getAggregateHistory()) }
     }
 
     override fun rehydrate(event: PaymentEvent) {

@@ -1,9 +1,9 @@
 package es.template.application.domain
 
-
+import es.template.application.payment.domain.PaymentCreatedEvent
 import spock.lang.Specification
 
-class PaymentSpec extends Specification {
+class OneOffPaymentSpec extends Specification {
 
     def "Should add PaymentCreatedEvent"() {
         given:

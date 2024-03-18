@@ -1,4 +1,4 @@
-package es.template.application.port.out
+package es.template.application.payment.port.out
 
 interface AggregateRepository<T> {
     fun findById(id: String): T?

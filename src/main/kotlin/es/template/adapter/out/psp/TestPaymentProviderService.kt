@@ -1,6 +1,6 @@
 package es.template.adapter.out.psp
 
-import es.template.application.port.out.PaymentExternalService
+import es.template.application.payment.port.out.PaymentExternalService
 
 class TestPaymentProviderService : PaymentExternalService {
 }
