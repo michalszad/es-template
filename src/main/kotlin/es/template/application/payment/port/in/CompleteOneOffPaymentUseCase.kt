@@ -1,6 +1,6 @@
 package es.template.application.payment.port.`in`
 
-import es.template.application.domain.PaymentHistory
+import es.template.application.payment.domain.PaymentHistory
 
 interface CompleteOneOffPaymentUseCase {
 

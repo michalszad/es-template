@@ -1,17 +1,14 @@
 package es.template.application.payment.services
 
+import es.template.application.payment.domain.PaymentAggregate
 import es.template.application.payment.domain.PaymentChanges
 import es.template.application.payment.domain.PaymentHistory
 import es.template.application.payment.port.`in`.InitializeOneOffPaymentUseCase
-import es.template.application.payment.port.out.PaymentExternalService
 import es.template.application.payment.port.out.PaymentRepository
-import org.springframework.stereotype.Service
 
 // One off or sale and recurring
-@Service
 class InitializeOneOffOneOffPaymentService(
-    private val paymentRepository: PaymentRepository,
-    private val paymentExternalService: PaymentExternalService,
+        private val paymentRepository: PaymentRepository
 ) : InitializeOneOffPaymentUseCase {
 
     override fun initializePayment(command: InitializeOneOffPaymentUseCase.InitializePaymentCommand): PaymentHistory {
@@ -20,10 +17,10 @@ class InitializeOneOffOneOffPaymentService(
         val initialized = payment.initialize(command.id)
 
         // Approach with aggregate
-        paymentRepository.store(initialized)
+//        paymentRepository.store(initialized)
 
         // Or
-        paymentRepository.storeAlternative(PaymentChanges(initialized.pullChanges()))
+        paymentRepository.storeAlternative(PaymentAggregate(command.id), PaymentChanges(initialized.pullChanges()))
         return PaymentHistory(initialized.getAggregateHistory())
     }
 }

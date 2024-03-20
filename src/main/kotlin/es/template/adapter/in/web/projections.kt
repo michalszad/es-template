@@ -1,32 +1,30 @@
 package es.template.adapter.`in`.web
 
-import es.template.application.domain.*
-import org.springframework.stereotype.Component
+import es.template.application.payment.domain.*
 
 // Payment history could be sealed class with different types, history of events or othet
 interface Projection {
     fun createFrom(paymentHistory: PaymentHistory): PaymentResponse
 }
 
-@Component
-class PaymentProjection : Projection {
+class PaymentQueryProjection : Projection {
 
     lateinit var id: String
     lateinit var description: String
-    lateinit var state: Payment.State
+    lateinit var state: String
 
     private fun on(event: PaymentCreatedEvent) {
         id = event.paymentId
-        state = Payment.State.CREATED
+        state = "CREATED"
         description = event.description
     }
 
     private fun on(event: PaymentInitializedEvent) {
-        state = Payment.State.INITIALIZED
+        state = "INITIALIZED"
     }
 
     private fun on(event: PaymentCompletedEvent) {
-        state = Payment.State.COMPLETED
+        state = "COMPLETED"
     }
 
     private fun rehydrate(event: Event) {
@@ -43,27 +41,27 @@ class PaymentProjection : Projection {
     override fun createFrom(paymentHistory: PaymentHistory): PaymentResponse {
         paymentHistory.events.forEach { event -> this.rehydrate(event) }
         return when (state) {
-            Payment.State.CREATED, Payment.State.INITIALIZED, Payment.State.COMPLETED ->
+            "CREATED", "INITIALIZED", "COMPLETED" ->
                 PaymentResponse(
-                    status = "SUCCESS",
-                    paymentId = id,
-                    parameters = mapOf("description" to description)
+                        status = "SUCCESS",
+                        paymentId = id,
+                        parameters = mapOf("description" to description)
                 )
-            Payment.State.COMPLETED_UNKNOWN ->
+            "COMPLETED_UNKNOWN" ->
                 PaymentResponse(
-                    status = "UNKNOWN",
-                    paymentId = id
+                        status = "UNKNOWN",
+                        paymentId = id
                 )
-            Payment.State.INITIALIZE_FAILED, Payment.State.COMPLETED_FAILED ->
+            "INITIALIZE_FAILED", "COMPLETED_FAILED" ->
                 PaymentResponse(
-                    status = "FAILED",
-                    paymentId = id,
+                        status = "FAILED",
+                        paymentId = id,
                 )
             else ->
                 PaymentResponse(
-                    status = "FAILED",
-                    paymentId = id,
-                    errorContext = mapOf("errorMessage" to "Unexpected error")
+                        status = "FAILED",
+                        paymentId = id,
+                        errorContext = mapOf("errorMessage" to "Unexpected error")
                 )
         }
     }

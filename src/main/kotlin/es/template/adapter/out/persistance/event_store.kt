@@ -1,7 +1,7 @@
 package es.template.adapter.out.persistance
 
-import es.template.application.domain.Aggregate
-import es.template.application.domain.Event
+import es.template.application.payment.domain.Aggregate
+import es.template.application.payment.domain.Event
 
 interface EventStore {
     fun store(aggregate: Aggregate, event: Event)

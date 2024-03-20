@@ -1,6 +1,6 @@
 package es.template.adapter.out.persistance
 
-import es.template.application.domain.PaymentEvent
+import es.template.application.payment.domain.PaymentEvent
 
 // Name could be different, here we put code to create flat projections in DB
 

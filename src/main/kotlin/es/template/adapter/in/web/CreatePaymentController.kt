@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+// Eventually if we want to remove annotations, we need to use different configuration options, maybe xml
 @RestController
 @RequestMapping("/api/command")
 class CreatePaymentController(

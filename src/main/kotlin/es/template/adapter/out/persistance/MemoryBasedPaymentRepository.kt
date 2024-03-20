@@ -1,6 +1,5 @@
 package es.template.adapter.out.persistance
 
-import es.template.application.domain.*
 import es.template.application.payment.domain.*
 import es.template.application.payment.port.out.PaymentRepository
 
@@ -8,16 +7,28 @@ import es.template.application.payment.port.out.PaymentRepository
 class MemoryBasedPaymentRepository(
         private val paymentFactory: PaymentFactory,
         private val eventStore: EventStore,
-        private val paymentProjection: PaymentProjection
+        private val paymentProjection: PaymentProjection,
+        private val paymentIntegrationEvents: PaymentIntegrationEvents
 ) : PaymentRepository {
 
+    override fun store(aggregateId: PaymentAggregate, history: History<PaymentEvent>) {
+        history.getAggregateHistory().forEach { paymentEvent ->
+            eventStore.store(aggregateId, paymentEvent)
 
-    override fun store(payment: History<PaymentEvent>) {
-        TODO("Not yet implemented")
+            // Additional stuff, like adding projections, integration events etc.
+            paymentProjection.store(paymentEvent)
+            paymentIntegrationEvents.store(paymentEvent)
+        }
     }
 
-    override fun storeAlternative(events: PaymentChanges) {
-        TODO("Not yet implemented")
+    override fun storeAlternative(aggregateId: PaymentAggregate, changes: PaymentChanges) {
+        changes.events.forEach { paymentEvent ->
+            eventStore.store(aggregateId, paymentEvent)
+
+            // Additional stuff, like adding projections, integration events etc.
+            paymentProjection.store(paymentEvent)
+            paymentIntegrationEvents.store(paymentEvent)
+        }
     }
 
     override fun findInitializable(id: String): Initializable {

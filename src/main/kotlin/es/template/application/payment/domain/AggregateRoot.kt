@@ -1,4 +1,4 @@
-package es.template.application.domain
+package es.template.application.payment.domain
 
 abstract class AggregateRoot<E : Event> {
 
